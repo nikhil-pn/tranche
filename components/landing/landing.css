@@ -1,0 +1,71 @@
+/* Landing page only. Every selector is scoped to the landing page, so nothing leaks into /dashboard. */
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.lp-root) {
+    scroll-behavior: smooth;
+  }
+}
+html:has(.lp-root) {
+  scroll-padding-top: 76px;
+}
+
+/* Faint timeline columns behind the hero, like the Gantt's day grid. */
+.lp-grid-bg {
+  background-image: linear-gradient(to right, rgba(22, 24, 29, 0.055) 1px, transparent 1px);
+  background-size: 56px 100%;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 25%, transparent 78%);
+}
+.lp-grid-bg-dark {
+  background-image: linear-gradient(to right, rgba(246, 244, 239, 0.06) 1px, transparent 1px);
+  background-size: 56px 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000, transparent 85%);
+}
+
+/* "Waiting for payment" hatch, as on the Gantt. */
+.lp-hatch {
+  background: repeating-linear-gradient(135deg, #efece4 0 5px, #e4e0d5 5px 10px);
+}
+
+/* Hero: a gentle rise on load. CSS only, so it works before hydration. */
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.lp-rise {
+  animation: lp-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Below the fold: fade in once on scroll (see RevealOnScroll). */
+[data-reveal] {
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--d, 0ms);
+}
+.lp-reveal-ready [data-reveal]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-rise {
+    animation: none;
+  }
+  [data-reveal] {
+    transition: none;
+  }
+  .lp-reveal-ready [data-reveal]:not([data-shown]) {
+    opacity: 1;
+    transform: none;
+  }
+}
