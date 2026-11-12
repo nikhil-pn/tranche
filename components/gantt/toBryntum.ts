@@ -301,7 +301,7 @@ export function toBryntum(ws: Workspace): BryntumPlan {
     .filter((t) => t.kind === "work" && t.assigneeId && crew.has(t.assigneeId))
     .map((t) => ({ id: `a_${t.id}`, event: t.id, resource: t.assigneeId as string, units: 100 }));
 
-  const timeRanges: BTimeRange[] = [{ id: "today", name: "Today (demo clock)", startDate: ws.today, cls: "tr-today" }];
+  const timeRanges: BTimeRange[] = [{ id: "today", name: "Today", startDate: ws.today, cls: "tr-today" }];
   for (const g of ws.gates) {
     if (gateOpen(g) || !g.due) continue;
     const t = ws.tasks.find((x) => x.gateId === g.id);

@@ -576,7 +576,11 @@
 }
 
 .tranche-gantt .b-time-ranges-header-canvas .b-sch-time-range.tr-today label {
-  margin: 5px 0 0 0;
+  /* Sits on the day row, below the month name, so it never covers "December 2026". */
+  margin: 0;
+  position: absolute;
+  bottom: 2px;
+  left: 0;
   padding: 2px 8px 2px 7px;
   border-radius: 0 999px 999px 0;
   background: var(--ink, #16181d);
