@@ -1,0 +1,30 @@
+  !!  This installs a plugin from
+      paypaldev/server-sdk-context-plugin-preview@main, not from Claude Code's
+      marketplace.
+      A plugin can run commands through its hooks and MCP servers.
+
+Installing 'paypal' from paypaldev/server-sdk-context-plugin-preview@main
+      Integrate and consume the APIMatic-generated PayPal Server SDK SDK —
+      bundled skills for csharp, java, php, Python, ruby, TypeScript.
+------------------------------------------------------------------------------
+
+[Harnesses]
+      Installing into: Claude Code
+
+[Fetch]
+      Fetching marketplace via git ...
+  ✓   Plugin source ready
+
+[Claude Code]
+  ✓   Added marketplace 'context-plugins-local'
+  ✓   Installed paypal@context-plugins-local (user scope)
+      Start with `claude` or /reload-plugins to load newly added plugin.
+
+------------------------------------------------------------------------------
+  ✓   Installed into: Claude Code
+
+
+1 plugin installed
+
+    paypal  Claude Code
+
