@@ -53,6 +53,8 @@ The agent is Claude (`claude-opus-5-5`, adaptive thinking, low effort by default
 - `flag_note`, for notes that try to give it orders
 - `get_project_status`, plus the Agent Toolkit's `list_invoices` and `get_invoice`
 
+A second use of Claude lives in the Books tab, where AG Studio's built-in agents run on `claude-sonnet-5-5` (see Sponsor tools).
+
 The agent decides what needs doing on a given day. It answers questions without acting, raises each invoice once, and explains in a few plain sentences what it did and what the operator should do next. It has no tool that sends money.
 
 ## Why the agent cannot pay anyone
@@ -73,7 +75,7 @@ Approved payouts are written to a hash-chained receipt log. Project notes reach 
 ## Sponsor tools
 
 - **Bryntum Gantt** (`components/gantt/`). This is the plan board. Payment gates are milestones, and the work behind each gate depends on it, so a late payment visibly pushes the work after it. It also shows the critical path, the original plan as a baseline, and a "today" line that follows the demo clock. Editing a task in the Gantt saves it back to the plan. The trial bundle is loaded at runtime from `public/vendor/bryntum/`, which `scripts/copy-bryntum.mjs` copies from `node_modules`. It is not bundled, because bundling it ran the build out of memory.
-- **AG Studio** (`components/books/`). This is the "Books" tab: a report over the project's ledger with KPIs, payment gates by status, crew pay, a custom mandate widget and a receivables grid. _More detail on the AI assistant is added before submission._
+- **AG Studio** (`components/books/`). This is the "Books" tab, an AG Studio workspace over the project ledger: receivables, crew pay, payouts, tasks, activity and the signed mandate. It has a custom Mandate widget, a theme that matches the app, KPIs, payment gates by status, crew pay and a receivables grid. Switch to "Ask and build" and AG Studio's own agents (lead, Page, Widget and Data) run on Claude through a small adapter, a swapped-in LLM harness (`components/books/claudeAdapter.ts`, server half in `app/api/ai/books/route.ts`, which keeps the key on the server). Ask a question and the agents read the data. Ask for a chart and they add it to the page and configure it. The datasets are read-only, so nothing in Books can move money.
 - **APIMatic Context Plugin.** The PayPal Server SDK context plugin was installed into Claude Code (log in `docs/apimatic/install.log`). Its `typescript-getting-started` and `typescript-error-handling` skills shaped `lib/paypal/orders.ts`: one shared `Client` with client-credentials auth for the sandbox environment, `OrdersController` and `PaymentsController` for the hold flow, and `ApiError` mapped to plain sentences with PayPal's issue code kept.
 
 ## Try it
