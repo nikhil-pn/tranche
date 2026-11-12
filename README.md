@@ -5,6 +5,7 @@
 Small studios plan the work in one tool and chase the money in another, so the plan keeps pretending the client has paid. In Tranche the money is part of the plan. Every phase of a client project ends in a PayPal payment gate, and the work after a gate stays locked until the client's money arrives. A Claude agent does the money work a careful studio manager would do. Plain code makes sure the agent can never pay anyone on its own.
 
 - Live demo: https://tranche-kohl.vercel.app (access code `northwind-judge`)
+- How it works: https://tranche-kohl.vercel.app/how-it-works
 - Video (under 3 minutes): _added before submission_
 - Built for the PayPal AI Hackathon, November 2026. MIT licence.
 

@@ -3,6 +3,7 @@
 // The app shell: header, number strip, tabs on the left, agent rail on the right.
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import Link from "next/link";
 import { TrancheProvider, useTranche } from "@/lib/client/store";
 import { diffDays, fmtDay } from "@/lib/dates";
 import { collected, contractTotal, heldAmount, outstanding, paidOut, projectEnd, slipDays } from "@/lib/schedule";
@@ -79,6 +80,12 @@ function Header({ ws }: { ws: Workspace }) {
           +3 days
         </Do>
         <span className="mx-1 h-6 w-px bg-line" />
+        <Link
+          href="/how-it-works"
+          className="mr-1 text-[12.5px] whitespace-nowrap text-ink-2 underline decoration-line underline-offset-[3px] hover:text-ink hover:decoration-ink-3"
+        >
+          How it works
+        </Link>
         <Pill tone={ws.mode === "sandbox" && !sample ? "blue" : "grey"}>{mode}</Pill>
         <Button
           size="md"
