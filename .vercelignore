@@ -1,0 +1,8 @@
+# Never upload local secrets; production env vars are set in the Vercel project instead.
+.env
+.env.*
+!.env.example
+# Rebuilt on Vercel by the prebuild step (scripts/copy-bryntum.mjs)
+public/vendor
+.next
+node_modules
