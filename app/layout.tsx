@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   title: "Tranche: the delivery plan where money is a dependency",
   description:
     "A project plan with PayPal payment gates. An agent raises invoices, chases late payments, replans the schedule, and pays the crew only inside a mandate a human signed.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f6f4ef",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
