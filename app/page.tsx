@@ -1,13 +1,17 @@
 /* eslint-disable @next/next/no-img-element -- plain <img>: these are small static crops, and skipping the image optimizer keeps hosting usage at zero. */
 
+import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DASHBOARD_URL, DEMO_VIDEO_ID, GITHUB_URL } from "@/lib/site";
+import RevealOnScroll from "@/components/landing/RevealOnScroll";
+import { ArrowOut, ArrowRight, Check, GitHubMark, Lock, Play } from "@/components/landing/icons";
+import "@/components/landing/landing.css";
 
 export const metadata: Metadata = {
   title: "Tranche: the delivery plan where money is a dependency",
   description:
-    "A short tour of Tranche: a project plan where every phase ends in a PayPal payment gate, and a Claude agent that can never pay anyone on its own.",
+    "Every phase of a client project ends in a PayPal payment gate. A Claude agent raises invoices, chases late payments and replans the work, and it can never pay anyone on its own. Try the live demo.",
 };
 
 // ---------- content (taken from the README) ----------
@@ -100,34 +104,317 @@ const BUILT_WITH = [
   "Next.js",
 ];
 
+const NAV = [
+  { href: "#how", label: "How it works" },
+  { href: "#safety", label: "Safety" },
+  { href: "#built-with", label: "Built with" },
+];
+
 // ---------- small pieces ----------
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
-const BTN =
-  "inline-flex h-11 items-center justify-center rounded-md px-5 text-[14px] font-medium whitespace-nowrap transition-colors select-none " +
-  FOCUS;
-const BTN_PRIMARY = `${BTN} bg-ink text-paper hover:bg-ink/85`;
-const BTN_SECONDARY = `${BTN} border border-line bg-card text-ink hover:border-ink-3`;
+const LIFT =
+  "transition-[translate,box-shadow,background-color,border-color,color] duration-200 ease-out hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0";
 
-function Kicker({ children }: { children: React.ReactNode }) {
-  return <p className="num text-[12px] font-medium tracking-[0.08em] text-ink-3 uppercase">{children}</p>;
+/** The one action that matters. Large, solid, with an arrow that nudges on hover. */
+const CTA_BIG =
+  `group inline-flex h-14 items-center justify-center gap-2.5 rounded-full px-7 text-[16px] font-medium whitespace-nowrap select-none ${LIFT} ${FOCUS} ` +
+  "bg-ink text-paper shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_24px_-10px_rgba(22,24,29,0.6)] hover:bg-[#262932] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_16px_30px_-12px_rgba(22,24,29,0.6)]";
+const BTN_GHOST_BIG =
+  `inline-flex h-14 items-center justify-center gap-2.5 rounded-full border border-line bg-card/80 px-6 text-[15px] font-medium whitespace-nowrap text-ink select-none ${LIFT} ${FOCUS} ` +
+  "hover:border-ink-3 hover:shadow-[0_10px_24px_-14px_rgba(22,24,29,0.35)]";
+
+function d(ms: number): CSSProperties {
+  return { "--d": `${ms}ms` } as CSSProperties;
 }
 
-function SectionTitle({ id, children }: { id: string; children: React.ReactNode }) {
+function Kicker({ children, className = "text-ink-3" }: { children: ReactNode; className?: string }) {
+  return <p className={`num text-[12px] font-medium tracking-[0.08em] uppercase ${className}`}>{children}</p>;
+}
+
+function SectionTitle({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <h2 id={id} className="display text-[34px] leading-[1.1] text-balance text-ink sm:text-[42px]">
+    <h2 id={id} className="display text-[34px] leading-[1.1] text-balance text-ink sm:text-[44px]">
       {children}
     </h2>
   );
 }
 
-function ArrowOut() {
+function CtaArrow() {
   return (
-    <svg viewBox="0 0 12 12" className="ml-1.5 size-2.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-      <path d="M4.5 2.5h5v5M9.5 2.5 3 9" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <ArrowRight className="size-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none" />
   );
 }
+
+// ---------- top bar ----------
+
+function TopBar() {
+  return (
+    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 w-full max-w-[1160px] items-center gap-2 px-4 sm:h-16 sm:px-8">
+        <a href="#top" className={`display shrink-0 rounded-sm text-[26px] leading-none text-ink sm:text-[28px] ${FOCUS}`}>
+          Tranche
+        </a>
+        <nav aria-label="Sections" className="ml-6 hidden items-center gap-0.5 md:flex">
+          {NAV.map((n) => (
+            <a
+              key={n.href}
+              href={n.href}
+              className={`rounded-full px-3 py-1.5 text-[14px] text-ink-2 transition-colors hover:bg-ink/5 hover:text-ink ${FOCUS}`}
+            >
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <div className="ml-auto flex items-center gap-1 sm:gap-2">
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Tranche on GitHub"
+            className={`inline-flex h-9 items-center gap-2 rounded-full px-2.5 text-[14px] text-ink-2 transition-colors hover:bg-ink/5 hover:text-ink sm:px-3 ${FOCUS}`}
+          >
+            <GitHubMark className="size-[18px] sm:size-4" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
+          <Link
+            href={DASHBOARD_URL}
+            className={`group inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[14px] font-medium whitespace-nowrap text-paper shadow-[0_6px_16px_-8px_rgba(22,24,29,0.6)] select-none hover:bg-[#262932] sm:h-10 sm:px-5 ${LIFT} ${FOCUS}`}
+          >
+            <span className="sm:hidden">Try it</span>
+            <span className="hidden sm:inline">Try the live demo</span>
+            <CtaArrow />
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+// ---------- hero ----------
+
+function ProductShot() {
+  return (
+    <figure className="lp-rise" style={d(260)}>
+      <div className="relative">
+        {/* soft colour wash behind the frame */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-6 -top-10 -bottom-6 rounded-[48px] bg-[radial-gradient(60%_60%_at_30%_40%,rgba(11,110,79,0.13),transparent_70%),radial-gradient(50%_55%_at_80%_60%,rgba(59,91,219,0.10),transparent_70%)] blur-2xl sm:-inset-x-12"
+        />
+        <div className="relative overflow-hidden rounded-xl border border-line bg-card shadow-[0_40px_80px_-36px_rgba(22,24,29,0.4),0_14px_28px_-16px_rgba(22,24,29,0.16)] sm:rounded-2xl">
+          {/* browser chrome */}
+          <div className="flex items-center gap-3 border-b border-line bg-paper-2/80 px-3 py-2 sm:px-4 sm:py-2.5">
+            <div className="flex shrink-0 gap-1.5" aria-hidden>
+              <span className="size-2.5 rounded-full bg-[#e3ded3]" />
+              <span className="size-2.5 rounded-full bg-[#e3ded3]" />
+              <span className="size-2.5 rounded-full bg-[#e3ded3]" />
+            </div>
+            <div className="mx-auto flex h-6 min-w-0 items-center gap-1.5 rounded-md border border-line bg-card px-2.5 text-[11px] text-ink-3 sm:h-7 sm:px-3 sm:text-[12px]">
+              <Lock className="size-2.5 shrink-0" />
+              <span className="num truncate">tranche-kohl.vercel.app/dashboard</span>
+            </div>
+            <div className="hidden w-[42px] shrink-0 sm:block" aria-hidden />
+          </div>
+          <Link href={DASHBOARD_URL} className={`group relative block ${FOCUS}`}>
+            <picture>
+              <source media="(max-width: 639px)" srcSet="/how/dashboard-phone.webp" width={1440} height={1066} />
+              <img
+                src="/how/dashboard.webp"
+                width={2160}
+                height={1350}
+                fetchPriority="high"
+                decoding="async"
+                alt="The Tranche dashboard at the end of the demo project: $12,000 collected across 4 payment gates, $6,700 paid to the crew in 3 payouts, the plan 5 days behind after a late payment, and the agent's activity log, where a person approved a $2,900 crew payout after all 8 mandate checks passed."
+                className="block h-auto w-full"
+              />
+            </picture>
+            <span
+              aria-hidden
+              className="absolute inset-0 flex items-center justify-center bg-ink/0 opacity-0 transition-[opacity,background-color] duration-200 group-hover:bg-ink/10 group-hover:opacity-100"
+            >
+              <span className="inline-flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[14px] font-medium text-paper shadow-lg">
+                Open the live demo
+                <ArrowRight className="size-4" />
+              </span>
+            </span>
+          </Link>
+        </div>
+      </div>
+      <figcaption className="mx-auto mt-5 max-w-[68ch] px-2 text-center text-[13px] leading-[1.6] text-pretty text-ink-3 sm:text-[13.5px]">
+        The demo project at the finish: all four payment gates paid, one of them late, the plan moved five days, and
+        $6,700 paid to the crew after a person approved each payout.
+      </figcaption>
+    </figure>
+  );
+}
+
+function Hero() {
+  return (
+    <section id="top" aria-labelledby="hero-title" className="relative overflow-hidden">
+      <div aria-hidden className="lp-grid-bg pointer-events-none absolute inset-0" />
+      <div className="relative mx-auto w-full max-w-[1160px] px-5 pt-10 sm:px-8 sm:pt-16 lg:pt-14">
+        <p
+          className="lp-rise inline-flex max-w-full items-center gap-2 rounded-full border border-line bg-card/80 px-3 py-1 text-[12.5px] leading-[1.4] text-ink-2"
+          style={d(0)}
+        >
+          <span className="size-1.5 shrink-0 rounded-full bg-green" aria-hidden />
+          <span>
+            PayPal AI Hackathon entry<span className="hidden sm:inline"> · runs on the PayPal sandbox</span>
+          </span>
+        </p>
+        <h1
+          id="hero-title"
+          className="lp-rise display mt-5 max-w-[12.5em] text-[44px] leading-[1.02] text-balance text-ink min-[400px]:text-[48px] sm:mt-6 sm:text-[72px] sm:leading-[0.98] lg:text-[86px]"
+          style={d(60)}
+        >
+          The delivery plan where <span className="text-green">money</span> is a dependency.
+        </h1>
+        <p
+          className="lp-rise mt-5 max-w-[56ch] text-[17px] leading-[1.6] text-pretty text-ink-2 sm:mt-7 sm:text-[19px]"
+          style={d(120)}
+        >
+          Every phase of a client project ends in a PayPal payment gate, and the work after it waits for the money. A
+          Claude agent does the money work, and it can never pay anyone on its own.
+        </p>
+        <div className="lp-rise mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:items-center" style={d(180)}>
+          <Link href={DASHBOARD_URL} className={CTA_BIG}>
+            Try the live demo
+            <CtaArrow />
+          </Link>
+          <a href="#video" className={BTN_GHOST_BIG}>
+            <span className="flex size-6 items-center justify-center rounded-full bg-ink/90 text-paper" aria-hidden>
+              <Play className="ml-px size-2.5" />
+            </span>
+            Watch the 2-minute video
+          </a>
+        </div>
+        <p className="lp-rise mt-4 text-[13.5px] text-ink-3" style={d(220)}>
+          No sign-up. Real PayPal sandbox and Claude calls.
+        </p>
+      </div>
+      <div className="relative mx-auto mt-12 w-full max-w-[1240px] px-3 pb-6 sm:mt-12 sm:px-8">
+        <ProductShot />
+      </div>
+    </section>
+  );
+}
+
+// ---------- what it does ----------
+
+function GateVisual() {
+  return (
+    <div className="flex h-full flex-col justify-center gap-3" aria-hidden>
+      <div className="flex items-center gap-2">
+        <div className="flex h-8 min-w-0 flex-1 items-center rounded-md border border-green/25 bg-green-soft px-2.5 text-[12px] font-medium text-green">
+          <span className="truncate">Discovery</span>
+        </div>
+        <span className="size-3 shrink-0 rotate-45 rounded-[2px] bg-amber" />
+        <div className="lp-hatch flex h-8 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line px-2.5 text-[12px] text-ink-3">
+          <Lock className="size-3 shrink-0" />
+          <span className="truncate">Design</span>
+        </div>
+      </div>
+      <p className="num text-[11.5px] text-amber">◆ $2,400 · waiting for the client</p>
+    </div>
+  );
+}
+
+function AgentVisual() {
+  const tools = ["raise_invoice", "send_payment_reminder", "reschedule_after_late_payment"];
+  return (
+    <ul className="flex h-full flex-col justify-center gap-1.5" aria-hidden>
+      {tools.map((t) => (
+        <li
+          key={t}
+          className="flex h-8 min-w-0 items-center gap-2 rounded-md border border-line bg-card px-2.5 text-[11.5px]"
+        >
+          <span className="flex size-4 shrink-0 items-center justify-center rounded-full bg-green-soft text-green">
+            <Check className="size-2.5" />
+          </span>
+          <span className="num truncate text-ink">{t}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ApprovalVisual() {
+  return (
+    <div className="flex h-full flex-col justify-center" aria-hidden>
+      <div className="rounded-lg border border-line bg-card p-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="truncate text-[13px] font-medium text-ink">Pay $1,600 to 2 people</span>
+          <span className="shrink-0 rounded-full bg-amber-soft px-2 py-0.5 text-[10.5px] font-medium text-amber">
+            Proposed
+          </span>
+        </div>
+        <p className="num mt-1.5 flex items-center gap-1.5 text-[11px] text-green">
+          <Check className="size-2.5" /> 8 of 8 mandate checks pass
+        </p>
+        <div className="mt-2.5 flex gap-1.5">
+          <span className="rounded-md bg-ink px-2.5 py-1 text-[11px] font-medium text-paper">Approve</span>
+          <span className="rounded-md border border-line px-2.5 py-1 text-[11px] text-ink-2">Reject</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const VALUES: { title: string; body: string; visual: ReactNode }[] = [
+  {
+    title: "Payment gates on the plan",
+    body: "Every phase ends in a PayPal payment gate. Work after it waits for the money, so the plan never pretends the client has paid.",
+    visual: <GateVisual />,
+  },
+  {
+    title: "An agent does the money work",
+    body: "A Claude agent asks for the deposit hold, raises the invoices, sends reminders, and replans the work when a client pays late.",
+    visual: <AgentVisual />,
+  },
+  {
+    title: "Only a person can pay the crew",
+    body: "The agent can only propose crew pay. A person approves it, and plain code checks it against a signed mandate. Only then does PayPal send the money.",
+    visual: <ApprovalVisual />,
+  },
+];
+
+function WhatItDoes() {
+  return (
+    <section id="what" aria-labelledby="what-title">
+      <div className="mx-auto w-full max-w-[1160px] px-5 pt-14 pb-16 sm:px-8 sm:pt-20 sm:pb-24">
+        <div className="max-w-[62ch]" data-reveal>
+          <Kicker>What it does</Kicker>
+          <div className="mt-2">
+            <SectionTitle id="what-title">Plan the work and the money in one place</SectionTitle>
+          </div>
+          <p className="mt-4 text-[16px] leading-[1.6] text-pretty text-ink-2 sm:text-[17px]">
+            Small studios plan the work in one tool and chase the money in another, so the plan keeps pretending the
+            client has paid. In Tranche the money is part of the plan.
+          </p>
+        </div>
+        <ul className="mt-10 grid gap-4 sm:mt-14 lg:grid-cols-3 lg:gap-5">
+          {VALUES.map((v, i) => (
+            <li key={v.title} data-reveal style={d(i * 90)}>
+              <div
+                className={`flex h-full flex-col rounded-2xl border border-line bg-card p-5 shadow-[0_1px_0_rgba(22,24,29,0.03)] hover:shadow-[0_18px_40px_-22px_rgba(22,24,29,0.3)] sm:p-6 md:max-lg:grid md:max-lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:max-lg:items-center md:max-lg:gap-8 ${LIFT}`}
+              >
+                <div className="h-[132px] rounded-xl border border-line/70 bg-paper px-4">{v.visual}</div>
+                <div className="mt-6 md:max-lg:mt-0">
+                  <p className="num text-[12px] font-medium text-green">0{i + 1}</p>
+                  <h3 className="display mt-1.5 text-[27px] leading-[1.12] text-ink">{v.title}</h3>
+                  <p className="mt-2.5 text-[15.5px] leading-[1.6] text-pretty text-ink-2">{v.body}</p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+// ---------- video ----------
 
 function VideoFrame() {
   return (
@@ -149,17 +436,17 @@ function VideoFrame() {
             alt=""
             width={1400}
             height={788}
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 size-full object-cover opacity-45 blur-[1.5px]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/55 to-paper/25" />
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
             <span className="flex size-14 items-center justify-center rounded-full bg-ink/90 sm:size-16" aria-hidden>
-              <svg viewBox="0 0 16 16" className="ml-0.5 size-5 text-paper sm:size-6" fill="currentColor">
-                <path d="M4 2.6v10.8a.6.6 0 0 0 .92.5l8.5-5.4a.6.6 0 0 0 0-1L4.92 2.1A.6.6 0 0 0 4 2.6Z" />
-              </svg>
+              <Play className="ml-0.5 size-5 text-paper sm:size-6" />
             </span>
             <p className="display text-[26px] leading-none text-ink sm:text-[34px]">Demo video coming soon</p>
-            <p className="text-[13px] text-ink-2 sm:text-[14px]">Under 3 minutes.</p>
+            <p className="text-[13px] text-ink-2 sm:text-[14px]">About 2 minutes.</p>
           </div>
         </>
       )}
@@ -167,10 +454,40 @@ function VideoFrame() {
   );
 }
 
+function Video() {
+  return (
+    <section id="video" aria-labelledby="video-title" className="border-t border-line bg-paper-2/40">
+      <div className="mx-auto w-full max-w-[1160px] px-5 py-16 sm:px-8 sm:py-24">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" data-reveal>
+          <div>
+            <Kicker>The video</Kicker>
+            <div className="mt-2">
+              <SectionTitle id="video-title">Watch a whole project run</SectionTitle>
+            </div>
+          </div>
+          <Link
+            href={DASHBOARD_URL}
+            className={`group inline-flex w-fit items-center gap-1.5 rounded-sm text-[15px] font-medium text-ink underline decoration-line underline-offset-4 hover:decoration-ink-3 ${FOCUS}`}
+          >
+            Or try it yourself
+            <CtaArrow />
+          </Link>
+        </div>
+        <div className="mt-8 sm:mt-10" data-reveal>
+          <VideoFrame />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------- steps ----------
+
 function StepRow({ step, n }: { step: Step; n: number }) {
   const flip = n % 2 === 0; // even steps put the picture on the left (desktop only)
   return (
     <li
+      data-reveal
       className={`grid items-center gap-5 lg:gap-12 ${
         flip ? "lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]" : "lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
       }`}
@@ -189,7 +506,7 @@ function StepRow({ step, n }: { step: Step; n: number }) {
           target="_blank"
           rel="noopener noreferrer"
           title="Open full size"
-          className={`block overflow-hidden rounded-xl border border-line bg-card shadow-[0_12px_32px_-14px_rgba(22,24,29,0.2)] ${FOCUS}`}
+          className={`block overflow-hidden rounded-xl border border-line bg-card shadow-[0_12px_32px_-14px_rgba(22,24,29,0.2)] hover:shadow-[0_22px_44px_-18px_rgba(22,24,29,0.3)] ${LIFT} ${FOCUS}`}
         >
           <img
             src={step.img.src}
@@ -206,114 +523,156 @@ function StepRow({ step, n }: { step: Step; n: number }) {
   );
 }
 
-// ---------- page ----------
-
-export default function HowItWorksPage() {
+function Steps() {
   return (
-    <div className="flex-1 bg-paper text-ink">
-      <main>
-        {/* Hero */}
-        <section className="mx-auto w-full max-w-[1160px] px-5 pt-14 pb-10 sm:px-8 sm:pt-24 sm:pb-14">
+    <section id="how" aria-labelledby="how-title" className="border-t border-line">
+      <div className="mx-auto w-full max-w-[1160px] px-5 py-16 sm:px-8 sm:py-24">
+        <div className="max-w-[60ch]" data-reveal>
           <Kicker>How it works</Kicker>
-          <h1 className="display mt-3 text-[76px] leading-[0.95] text-ink sm:text-[112px]">Tranche</h1>
-          <p className="mt-5 max-w-[22ch] text-[22px] leading-[1.25] font-medium text-ink sm:max-w-none sm:text-[28px]">
-            The delivery plan where money is a dependency.
+          <div className="mt-2">
+            <SectionTitle id="how-title">Five steps, one project</SectionTitle>
+          </div>
+          <p className="mt-4 text-[16px] leading-[1.6] text-pretty text-ink-2">
+            The demo project is a $12,000 brand site for a coffee company, run by a three-person studio. It has four
+            payment gates: a $1,000 kickoff deposit and three milestone payments.
           </p>
-          <p className="mt-5 max-w-[60ch] text-[16px] leading-[1.65] text-pretty text-ink-2 sm:text-[17px]">
-            Small studios plan the work in one tool and chase the money in another, so the plan keeps pretending the
-            client has paid. In Tranche every phase ends in a PayPal payment gate, and the work after a gate stays
-            locked until the client&rsquo;s money arrives. A Claude agent does the money work, and plain code makes sure
-            it can never pay anyone on its own.
+          <p className="mt-2 text-[13px] text-ink-3">Tap or click a screenshot to open it full size.</p>
+        </div>
+        <ol className="mt-12 flex flex-col gap-14 sm:mt-16 sm:gap-20">
+          {STEPS.map((s, i) => (
+            <StepRow key={s.title} step={s} n={i + 1} />
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+// ---------- safety ----------
+
+function Safety() {
+  return (
+    <section id="safety" aria-labelledby="safety-title" className="border-t border-line bg-paper-2/60">
+      <div className="mx-auto grid w-full max-w-[1160px] gap-8 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-5" data-reveal>
+          <Kicker>The guardrail</Kicker>
+          <div className="mt-2">
+            <SectionTitle id="safety-title">Why the agent cannot pay anyone</SectionTitle>
+          </div>
+          <p className="mt-4 text-[16px] leading-[1.6] text-pretty text-ink-2">
+            A payout goes out only when all eight checks pass. They are plain code with no model involved, and the agent
+            has no tool that sends money.
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link href={DASHBOARD_URL} className={BTN_PRIMARY}>
-              Open the live demo
+          <p className="mt-3 text-[14px] leading-[1.6] text-pretty text-ink-3">
+            Approved payouts are written to a hash-chained receipt log. Project notes reach the model wrapped as
+            information, never as instructions.
+          </p>
+        </div>
+        <ol className="overflow-hidden rounded-xl border border-line bg-card lg:col-span-7" data-reveal style={d(80)}>
+          {CHECKS.map((c, i) => (
+            <li key={c} className="flex gap-4 border-t border-line px-4 py-3.5 first:border-t-0 sm:px-5">
+              <span className="num mt-[3px] w-5 shrink-0 text-[13px] leading-[1.55] text-ink-3">{i + 1}</span>
+              <span className="min-w-0 text-[15px] leading-[1.55] text-ink">{c}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+// ---------- built with ----------
+
+function BuiltWith() {
+  return (
+    <section id="built-with" aria-labelledby="built-title" className="border-t border-line">
+      <div className="mx-auto w-full max-w-[1160px] px-5 py-14 sm:px-8 sm:py-20" data-reveal>
+        <Kicker>Stack</Kicker>
+        <div className="mt-2">
+          <SectionTitle id="built-title">Built with</SectionTitle>
+        </div>
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {BUILT_WITH.map((t) => (
+            <li
+              key={t}
+              className={`inline-flex h-9 items-center rounded-full border border-line bg-card px-3.5 text-[13.5px] text-ink hover:border-ink-3 ${LIFT}`}
+            >
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+// ---------- closing call to action ----------
+
+function ClosingCta() {
+  return (
+    <section aria-labelledby="cta-title" className="mx-auto w-full max-w-[1160px] px-4 pb-14 sm:px-8 sm:pb-20">
+      <div
+        className="relative overflow-hidden rounded-[28px] bg-ink px-6 py-14 text-paper sm:px-14 sm:py-20"
+        data-reveal
+      >
+        <div aria-hidden className="lp-grid-bg-dark pointer-events-none absolute inset-0" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-24 -right-24 size-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(11,110,79,0.55),transparent)] blur-2xl"
+        />
+        <div className="relative">
+          <Kicker className="text-paper/55">Try it</Kicker>
+          <h2 id="cta-title" className="display mt-3 max-w-[15em] text-[40px] leading-[1.04] text-balance sm:text-[60px]">
+            See it run against the real PayPal sandbox.
+          </h2>
+          <p className="mt-5 max-w-[54ch] text-[16px] leading-[1.6] text-pretty text-paper/70 sm:text-[17px]">
+            Each visitor gets their own project. Move the demo clock, pay the invoices as the client, approve a crew
+            payout, then try to forge one.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Link
+              href={DASHBOARD_URL}
+              className={`group inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-paper px-7 text-[16px] font-medium whitespace-nowrap text-ink shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)] select-none hover:bg-white ${LIFT} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper`}
+            >
+              Try the live demo
+              <CtaArrow />
             </Link>
-            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={BTN_SECONDARY}>
-              Code on GitHub
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex h-14 items-center justify-center gap-2 rounded-full border border-paper/20 px-6 text-[15px] font-medium whitespace-nowrap text-paper select-none hover:border-paper/45 hover:bg-paper/5 ${LIFT} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper`}
+            >
+              <GitHubMark className="size-4" />
+              Open the code on GitHub
               <ArrowOut />
             </a>
           </div>
-          <p className="mt-4 text-[13px] leading-[1.6] text-ink-2">
-            The live demo asks for an access code once: <span className="num text-ink select-all">northwind-judge</span>. It
-            only keeps bots from spending the demo&apos;s PayPal sandbox and Claude calls.
+          <p className="mt-5 text-[13px] leading-[1.6] text-paper/55">
+            No sign-up. If it ever asks for an access code, it is{" "}
+            <span className="num text-paper/90 select-all">northwind-judge</span>.
           </p>
-        </section>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* Video */}
-        <section aria-label="Demo video" className="mx-auto w-full max-w-[1160px] px-5 pb-16 sm:px-8 sm:pb-24">
-          <VideoFrame />
-        </section>
+// ---------- page ----------
 
-        {/* Steps */}
-        <section aria-labelledby="steps" className="border-t border-line">
-          <div className="mx-auto w-full max-w-[1160px] px-5 py-16 sm:px-8 sm:py-24">
-            <div className="max-w-[60ch]">
-              <Kicker>The demo</Kicker>
-              <div className="mt-2">
-                <SectionTitle id="steps">Five steps, one project</SectionTitle>
-              </div>
-              <p className="mt-4 text-[16px] leading-[1.6] text-ink-2">
-                The demo project is a $12,000 brand site for a coffee company, run by a three-person studio. It has four
-                payment gates: a $1,000 kickoff deposit and three milestone payments.
-              </p>
-              <p className="mt-2 text-[13px] text-ink-3">Tap or click a screenshot to open it full size.</p>
-            </div>
-            <ol className="mt-12 flex flex-col gap-14 sm:mt-16 sm:gap-20">
-              {STEPS.map((s, i) => (
-                <StepRow key={s.title} step={s} n={i + 1} />
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* The eight checks */}
-        <section aria-labelledby="checks" className="border-t border-line bg-paper-2/60">
-          <div className="mx-auto grid w-full max-w-[1160px] gap-8 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-5">
-              <Kicker>The guardrail</Kicker>
-              <div className="mt-2">
-                <SectionTitle id="checks">Why the agent cannot pay anyone</SectionTitle>
-              </div>
-              <p className="mt-4 text-[16px] leading-[1.6] text-ink-2">
-                A payout goes out only when all eight checks pass. They are plain code with no model involved, and the
-                agent has no tool that sends money.
-              </p>
-              <p className="mt-3 text-[14px] leading-[1.6] text-ink-3">
-                Approved payouts are written to a hash-chained receipt log. Project notes reach the model wrapped as
-                information, never as instructions.
-              </p>
-            </div>
-            <ol className="overflow-hidden rounded-xl border border-line bg-card lg:col-span-7">
-              {CHECKS.map((c, i) => (
-                <li key={c} className="flex gap-4 border-t border-line px-4 py-3.5 first:border-t-0 sm:px-5">
-                  <span className="num mt-[3px] w-5 shrink-0 text-[13px] leading-[1.55] text-ink-3">{i + 1}</span>
-                  <span className="min-w-0 text-[15px] leading-[1.55] text-ink">{c}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* Built with */}
-        <section aria-labelledby="built" className="border-t border-line">
-          <div className="mx-auto w-full max-w-[1160px] px-5 py-14 sm:px-8 sm:py-20">
-            <Kicker>Stack</Kicker>
-            <div className="mt-2">
-              <SectionTitle id="built">Built with</SectionTitle>
-            </div>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {BUILT_WITH.map((t) => (
-                <li
-                  key={t}
-                  className="inline-flex h-9 items-center rounded-full border border-line bg-card px-3.5 text-[13.5px] text-ink"
-                >
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+export default function LandingPage() {
+  return (
+    <div className="lp-root flex-1 overflow-x-clip bg-paper text-ink">
+      <RevealOnScroll />
+      <TopBar />
+      <main>
+        <Hero />
+        <WhatItDoes />
+        <Video />
+        <Steps />
+        <Safety />
+        <BuiltWith />
+        <ClosingCta />
       </main>
 
       {/* Footer */}
@@ -325,7 +684,7 @@ export default function HowItWorksPage() {
               href={DASHBOARD_URL}
               className="text-ink underline decoration-line underline-offset-[3px] hover:decoration-ink-3"
             >
-              Open the live demo
+              Try the live demo
             </Link>
             <a
               href={GITHUB_URL}
