@@ -137,6 +137,11 @@ function markPaid(ws: Workspace, g: Gate, how: string): void {
   );
 }
 
+/** Now, but on the demo clock's date: records show the project's day, not the real one. */
+function stamp(ws: Workspace): string {
+  return `${ws.today}T${new Date().toISOString().slice(11)}`;
+}
+
 // ---------- deposit (PayPal Server SDK: authorize, then capture) ----------
 
 export async function requestHold(ws: Workspace, gateId: unknown, ctx: Ctx): Promise<string> {
@@ -341,7 +346,7 @@ export function addNote(ws: Workspace, n: { author?: unknown; authorRole?: unkno
   ws.seq.note += 1;
   ws.notes.push({
     id: `n${ws.seq.note}`,
-    at: new Date().toISOString(),
+    at: stamp(ws),
     author: clip(n.author, 60) || "Someone",
     authorRole: role,
     text,
@@ -382,7 +387,7 @@ export function signMandate(
   const fields: Omit<Mandate, "sig"> = {
     id: randomId("m"),
     signedBy,
-    signedAt: new Date().toISOString(),
+    signedAt: stamp(ws),
     expiresAt: addDays(ws.today, validDays),
     perPayoutCap: cap,
     totalBudget: budget,
@@ -437,7 +442,7 @@ function buildProposal(ws: Workspace, raw: unknown, reason: unknown, createdBy: 
   ws.seq.proposal += 1;
   return {
     id: `p${ws.seq.proposal}`,
-    createdAt: new Date().toISOString(),
+    createdAt: stamp(ws),
     createdBy,
     reason: clip(reason, 300),
     items,
@@ -470,7 +475,7 @@ export function proposePayout(ws: Workspace, rawItems: unknown, reason: unknown)
   ws.proposals.push(p);
   if (!res.ok) {
     p.status = "refused";
-    p.decidedAt = new Date().toISOString();
+    p.decidedAt = stamp(ws);
     const reasonText = refusalReason(res.checks, true);
     logEvent(ws, "gate", "bad", `Refused the agent's ${usd(p.total)} payout proposal. ${reasonText}`);
     return `Refused by the mandate check, nothing was paid. ${reasonText}`;
@@ -490,7 +495,7 @@ export async function approvePayout(ws: Workspace, proposalId: unknown, hash: un
     const onlyApproval = res.checks.every((c) => c.ok || c.id === "approval");
     if (p.status === "pending" && !onlyApproval) {
       p.status = "refused";
-      p.decidedAt = new Date().toISOString();
+      p.decidedAt = stamp(ws);
     }
     const text = refusalReason(res.checks);
     logEvent(ws, "gate", "bad", `Refused a ${usd(p.total)} payout. ${text}`);
@@ -509,7 +514,7 @@ export async function approvePayout(ws: Workspace, proposalId: unknown, hash: un
   const last = ws.receipts[ws.receipts.length - 1];
   const draft: Omit<PayoutReceipt, "hash"> = {
     seq: ws.receipts.length + 1,
-    at: new Date().toISOString(),
+    at: stamp(ws),
     proposalId: p.id,
     mandateId: mandate.id,
     approvedBy: by,
@@ -534,7 +539,7 @@ export function rejectPayout(ws: Workspace, proposalId: unknown, approver: unkno
   if (!p) throw new OpError("That payout proposal does not exist.", 404);
   if (p.status !== "pending") throw new OpError(`That proposal is already ${p.status}.`);
   p.status = "rejected";
-  p.decidedAt = new Date().toISOString();
+  p.decidedAt = stamp(ws);
   logEvent(ws, "human", "warn", `${clip(approver, 60) || "A person"} rejected the ${usd(p.total)} payout proposal. Nothing was paid.`, p.id);
   return "Proposal rejected. Nothing was paid.";
 }
@@ -585,7 +590,7 @@ export function forge(ws: Workspace, scenario: RedTeamScenario): string {
   const res = authorize(ws, p, null, { requireApproval: true });
   p.checks = res.checks;
   p.status = "refused";
-  p.decidedAt = new Date().toISOString();
+  p.decidedAt = stamp(ws);
   ws.proposals.push(p);
   const failed = res.checks.filter((x) => !x.ok).map((x) => x.label);
   logEvent(ws, "gate", "bad", `Safety test: a forged request to ${story} was refused before any PayPal call. Failed: ${failed.join(", ")}.`, p.id);
