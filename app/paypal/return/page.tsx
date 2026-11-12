@@ -50,7 +50,7 @@ export default function PayPalReturnPage() {
           </Suspense>
         </div>
         <Link
-          href="/"
+          href="/dashboard"
           className="mt-6 inline-flex h-9 items-center rounded-md bg-ink px-4 text-[13px] font-medium text-paper hover:bg-ink/85"
         >
           Back to Tranche

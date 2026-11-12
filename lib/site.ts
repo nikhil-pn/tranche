@@ -4,3 +4,6 @@
 export const DEMO_VIDEO_ID = "";
 
 export const GITHUB_URL = "https://github.com/nikhil-pn/tranche";
+
+/** The app itself. The code in the link is the public demo access code, so judges never have to type it. */
+export const DASHBOARD_URL = "/dashboard?code=northwind-judge";

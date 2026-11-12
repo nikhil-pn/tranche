@@ -81,7 +81,7 @@ function Header({ ws }: { ws: Workspace }) {
         </Do>
         <span className="mx-1 h-6 w-px bg-line" />
         <Link
-          href="/how-it-works"
+          href="/"
           className="mr-1 text-[12.5px] whitespace-nowrap text-ink-2 underline decoration-line underline-offset-[3px] hover:text-ink hover:decoration-ink-3"
         >
           How it works
