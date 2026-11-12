@@ -6,7 +6,7 @@ Small studios plan the work in one tool and chase the money in another, so the p
 
 - Live site: https://tranche-kohl.vercel.app (what it does and how it works, with the demo video)
 - Try it: https://tranche-kohl.vercel.app/dashboard?code=northwind-judge (the link carries the demo access code)
-- Video (under 3 minutes): _added before submission_
+- Video (1:42): https://youtu.be/HabTcCYR9dg
 - Built for the PayPal AI Hackathon, November 2026. MIT licence.
 
 ## What happens in the demo
