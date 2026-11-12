@@ -1,0 +1,705 @@
+/* Tranche plan board: ledger-paper skin on top of Bryntum's svalbard-light theme. */
+
+.tranche-gantt {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  background: var(--card, #fff);
+  color: var(--ink, #16181d);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.tranche-gantt .tg-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}
+
+.tranche-gantt .num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- toolbar ---------- */
+
+.tranche-gantt .tg-bar {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line, #e2ded3);
+  background: var(--paper, #f6f4ef);
+  font-size: 12.5px;
+  flex: 0 0 auto;
+}
+
+.tranche-gantt .tg-group {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+
+/* Narrow board: the legend takes its own second row instead of being clipped. */
+@container (max-width: 1180px) {
+  .tranche-gantt .tg-legend {
+    order: 3;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    row-gap: 4px;
+    margin-left: 0;
+    overflow: visible;
+  }
+}
+
+.tranche-gantt .tg-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--line, #e2ded3);
+  border-radius: 6px;
+  background: var(--card, #fff);
+  color: var(--ink-2, #4a4f5a);
+  font: inherit;
+  font-weight: 500;
+  white-space: nowrap;
+  flex: none;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.tranche-gantt .tg-btn:hover {
+  border-color: var(--ink-3, #8a8f99);
+  color: var(--ink, #16181d);
+}
+
+.tranche-gantt .tg-btn[aria-pressed="true"] {
+  background: var(--ink, #16181d);
+  border-color: var(--ink, #16181d);
+  color: #fff;
+}
+
+.tranche-gantt .tg-swatch {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.tranche-gantt .tg-swatch-critical {
+  background: var(--red, #b42318);
+}
+
+.tranche-gantt .tg-swatch-baseline {
+  background: var(--ink-3, #8a8f99);
+  opacity: 0.6;
+}
+
+.tranche-gantt .tg-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--ink-3, #8a8f99);
+  font-size: 12px;
+  margin-left: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.tranche-gantt .tg-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tranche-gantt .tg-dia {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  border-radius: 1.5px;
+  display: inline-block;
+}
+
+.tranche-gantt .tg-dia-paid { background: var(--green, #0b6e4f); }
+.tranche-gantt .tg-dia-invoiced { background: var(--amber, #b7791f); }
+.tranche-gantt .tg-dia-overdue { background: var(--red, #b42318); }
+.tranche-gantt .tg-dia-locked { background: var(--ink-3, #8a8f99); }
+
+.tranche-gantt .tg-hatch {
+  width: 22px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid #c9ccd2;
+  background: repeating-linear-gradient(135deg, #e9eaed 0 4px, #d5d8dd 4px 8px);
+}
+
+.tranche-gantt .tg-slip {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tranche-gantt .tg-slip-late {
+  background: var(--red-soft, #fbeae8);
+  color: var(--red, #b42318);
+}
+
+.tranche-gantt .tg-slip-ok {
+  background: var(--green-soft, #e3f1ec);
+  color: var(--green, #0b6e4f);
+}
+
+.tranche-gantt .tg-slip-date {
+  font-weight: 400;
+  font-size: 11.5px;
+  opacity: 0.85;
+}
+
+/* ---------- host ---------- */
+
+.tranche-gantt .tg-host {
+  position: absolute;
+  inset: 0;
+}
+
+.tranche-gantt .tg-host > .b-gantt {
+  width: 100%;
+  height: 100%;
+}
+
+.tranche-gantt .tg-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3, #8a8f99);
+  font-size: 13px;
+  background: var(--card, #fff);
+}
+
+/* ---------- Bryntum skin: variables ---------- */
+
+.tranche-gantt .tg-host {
+  font-size: 12.5px;
+}
+
+.tranche-gantt .tg-host .b-gantt.b-bryntum,
+.tranche-gantt .tg-host .b-gantt {
+  --b-grid-background: var(--card, #fff);
+  --b-grid-header-background: var(--paper, #f6f4ef);
+  --b-grid-header-color: var(--ink-3, #8a8f99);
+  --b-grid-header-font-weight: 600;
+  --b-grid-header-border-color: var(--line, #e2ded3);
+  --b-grid-cell-color: var(--ink, #16181d);
+  --b-grid-cell-border-color: var(--line, #e2ded3);
+  --b-grid-row-border-color: #efece4;
+  --b-grid-cell-padding-inline: 8px;
+  --b-grid-cell-hover-background: #faf8f3;
+  --b-grid-cell-selected-background: #f3f0e8;
+  --b-grid-cell-focused-outline-color: var(--ink-3, #8a8f99);
+  --b-grid-splitter-color: var(--line, #e2ded3);
+  --b-column-lines-tick-color: #f4f1ea;
+  --b-column-lines-major-color: var(--line, #e2ded3);
+  --b-timeline-border-color: var(--line, #e2ded3);
+  --b-gantt-task-border-radius: 4px;
+  --b-dependency-color: #b3b6bd;
+  --b-dependency-stroke-width: 1.25;
+  --b-baseline-background: #d8d3c6;
+  --b-baseline-border-radius: 2px;
+  --b-baseline-wrap-size: 0.32;
+  --b-baseline-flex: 1;
+  --b-baseline-margin-top: 2px;
+  --b-event-label-color: var(--ink-2, #4a4f5a);
+  --b-event-label-font-size: 11.5px;
+  --b-event-label-gap: 10px;
+  --b-critical-path-primary: var(--red, #b42318);
+  --b-critical-path-parent-primary: var(--red, #b42318);
+  --b-critical-path-stroke: var(--red, #b42318);
+  --b-tree-expander-color: var(--ink-3, #8a8f99);
+  --b-rollup-milestone-size: 8px;
+  color: var(--ink, #16181d);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* ---------- locked grid ---------- */
+
+.tranche-gantt .b-grid-header {
+  padding-inline: 8px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tranche-gantt .b-grid-header .b-grid-header-text {
+  padding-inline: 0;
+}
+
+.tranche-gantt .b-grid-header .b-grid-header-text-content {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.tranche-gantt .b-grid-cell {
+  font-size: 12.5px;
+}
+
+.tranche-gantt .b-grid-cell.num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--ink-2, #4a4f5a);
+}
+
+/* Phase rows read as section headers. */
+.tranche-gantt .b-grid-row.tr-row-phase,
+.tranche-gantt .b-grid-row.tr-row-phase .b-grid-cell {
+  background: var(--paper, #f6f4ef);
+}
+
+.tranche-gantt .b-grid-row.tr-row-phase .b-grid-cell {
+  font-weight: 600;
+  color: var(--ink, #16181d);
+}
+
+.tranche-gantt .b-grid-row.tr-row-phase .b-tree-cell-value {
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.tranche-gantt .b-grid-row.tr-row-phase .b-grid-cell.num {
+  color: var(--ink-2, #4a4f5a);
+  font-weight: 500;
+}
+
+.tranche-gantt .b-grid-row.tr-row-waiting .b-tree-cell-value {
+  color: var(--ink-3, #8a8f99);
+}
+
+.tranche-gantt .b-grid-row.tr-row-gate .b-tree-cell-value {
+  font-weight: 550;
+}
+
+/* Leaf rows: no bullet for work, a status diamond for payment gates. */
+.tranche-gantt .b-tree-leaf-cell .b-tree-icon {
+  width: 10px;
+  min-width: 10px;
+  margin-inline-end: 8px;
+  font-size: 0;
+}
+
+.tranche-gantt .b-tree-leaf-cell .b-tree-icon::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 4px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #cfcabd;
+}
+
+.tranche-gantt .tr-row-gate .b-tree-leaf-cell .b-tree-icon::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 1.5px;
+  transform: rotate(45deg);
+  background: var(--ink-3, #8a8f99);
+}
+
+.tranche-gantt .tr-row-gate-ready .b-tree-leaf-cell .b-tree-icon::before,
+.tranche-gantt .tr-row-gate-invoiced .b-tree-leaf-cell .b-tree-icon::before { background: var(--amber, #b7791f); }
+.tranche-gantt .tr-row-gate-held .b-tree-leaf-cell .b-tree-icon::before { background: var(--blue, #3b5bdb); }
+.tranche-gantt .tr-row-gate-paid .b-tree-leaf-cell .b-tree-icon::before { background: var(--green, #0b6e4f); }
+.tranche-gantt .tr-row-gate-overdue .b-tree-leaf-cell .b-tree-icon::before { background: var(--red, #b42318); }
+
+.tranche-gantt .tr-cell-who {
+  padding-inline: 0;
+}
+
+.tranche-gantt .tr-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.tranche-gantt .tr-row-waiting .tr-chip {
+  opacity: 0.45;
+}
+
+.tranche-gantt .tr-money-gate { font-weight: 650; color: var(--ink-3, #8a8f99); }
+.tranche-gantt .tr-money-ready,
+.tranche-gantt .tr-money-invoiced { color: var(--amber, #b7791f); }
+.tranche-gantt .tr-money-held { color: var(--blue, #3b5bdb); }
+.tranche-gantt .tr-money-paid { color: var(--green, #0b6e4f); }
+.tranche-gantt .tr-money-overdue { color: var(--red, #b42318); }
+.tranche-gantt .tr-money-work { color: var(--ink-2, #4a4f5a); }
+.tranche-gantt .tr-money-phase { color: var(--ink, #16181d); font-weight: 600; }
+
+/* ---------- time axis ---------- */
+
+.tranche-gantt .b-sch-header-row .b-sch-header-time-axis-cell {
+  text-transform: none;
+  letter-spacing: 0;
+  background: var(--paper, #f6f4ef);
+  color: var(--ink-3, #8a8f99);
+  border-color: var(--line, #e2ded3);
+}
+
+.tranche-gantt .b-sch-header-row-0 .b-sch-header-time-axis-cell {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-2, #4a4f5a);
+  letter-spacing: 0.02em;
+  justify-content: flex-start;
+  padding-inline-start: 10px;
+}
+
+.tranche-gantt .b-sch-header-row.b-lowest .b-sch-header-time-axis-cell {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- bars ---------- */
+
+/* Work: a soft tint of the assignee's colour, progress in the full colour. */
+.tranche-gantt .b-gantt-task-wrap.tr-work .b-gantt-task {
+  background: color-mix(in srgb, var(--b-primary) 26%, #fff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b-primary) 62%, #fff);
+  border-radius: 4px;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-work .b-task-percent-bar {
+  background: var(--b-primary);
+  border-radius: 4px 0 0 4px;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-work.tr-done .b-task-percent-bar {
+  border-radius: 4px;
+}
+
+/* Work behind a closed payment gate: hatched, muted, with a lock. */
+.tranche-gantt .b-gantt-task-wrap.tr-work.tr-waiting .b-gantt-task {
+  background: repeating-linear-gradient(135deg, #f1f1f3 0 5px, #e0e2e6 5px 10px);
+  box-shadow: inset 0 0 0 1px #c3c7ce;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-waiting .b-gantt-task-content {
+  padding-inline: 6px;
+  color: #7b808a;
+  font-size: 9px;
+  justify-content: flex-start;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-waiting .b-gantt-task-content i {
+  font-size: 9px;
+  color: #7b808a;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-waiting .b-sch-label {
+  color: var(--ink-3, #8a8f99);
+  font-size: 11px;
+}
+
+/* Phases: a thin ink bracket above their work. */
+.tranche-gantt .b-gantt-task-wrap.tr-phase .b-gantt-task {
+  background: #5c616c;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-phase .b-task-percent-bar {
+  background: var(--ink, #16181d);
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+.tranche-gantt .b-timeline-sub-grid .b-grid-row.tr-row-phase {
+  background: color-mix(in srgb, var(--paper, #f6f4ef) 70%, transparent);
+}
+
+/* Payment gates: diamonds in the colour of their status, with the money next to them. */
+.tranche-gantt .b-gantt-task-wrap.b-milestone-wrap.tr-gate,
+.tranche-gantt .b-baselines .b-gantt-task-wrap.b-has-baselines.b-milestone-wrap.tr-gate {
+  --b-milestone-size: 17px;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate .b-gantt-task-content::before {
+  background: var(--b-primary);
+  border-radius: 2.5px;
+  box-shadow: 0 0 0 2px var(--card, #fff), 0 1px 3px 2px rgba(22, 24, 29, 0.14);
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate .b-sch-label {
+  font-weight: 650;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3, #8a8f99);
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #f1f0ec;
+}
+
+/* A gate whose diamond has scrolled off the left edge draws no label (PlanGantt), so no empty pill either. */
+.tranche-gantt .b-gantt-task-wrap.tr-gate .b-sch-label:empty {
+  display: none;
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate-ready .b-sch-label,
+.tranche-gantt .b-gantt-task-wrap.tr-gate-invoiced .b-sch-label {
+  color: var(--amber, #b7791f);
+  background: var(--amber-soft, #f8efd9);
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate-held .b-sch-label {
+  color: var(--blue, #3b5bdb);
+  background: var(--blue-soft, #e8edfb);
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate-paid .b-sch-label {
+  color: var(--green, #0b6e4f);
+  background: var(--green-soft, #e3f1eb);
+}
+
+.tranche-gantt .b-gantt-task-wrap.tr-gate-overdue .b-sch-label {
+  color: var(--red, #b42318);
+  background: var(--red-soft, #fbe9e7);
+}
+
+/* Gate diamonds repeated on the phase bar keep their status colour. */
+.tranche-gantt .b-task-rollup.b-milestone { --b-primary: #8a8f99; opacity: 1; }
+.tranche-gantt .b-task-rollup.b-milestone[class*="b7791f"] { --b-primary: #b7791f; }
+.tranche-gantt .b-task-rollup.b-milestone[class*="3b5bdb"] { --b-primary: #3b5bdb; }
+.tranche-gantt .b-task-rollup.b-milestone[class*="0b6e4f"] { --b-primary: #0b6e4f; }
+.tranche-gantt .b-task-rollup.b-milestone[class*="b42318"] { --b-primary: #b42318; }
+
+/* The original plan, drawn under each bar. */
+.tranche-gantt .b-task-baseline {
+  background: #d8d3c6;
+  border: none;
+}
+
+/* ---------- dependencies ---------- */
+
+.tranche-gantt path.b-sch-dependency:not(.b-click-area) {
+  stroke: #b3b6bd;
+  stroke-width: 1.25;
+}
+
+/* A link into or out of a payment gate: the money dependency. */
+.tranche-gantt path.b-sch-dependency.tr-dep-money:not(.b-click-area) {
+  stroke: #8a8f99;
+  stroke-dasharray: 4 3;
+}
+
+/* ---------- critical path (toolbar toggle) ---------- */
+
+.tranche-gantt .b-gantt-critical-paths path.b-sch-dependency.b-critical:not(.b-click-area) {
+  stroke: var(--red, #b42318);
+  stroke-width: 1.75;
+  stroke-dasharray: none;
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-work .b-gantt-task {
+  box-shadow: inset 0 0 0 1.5px var(--red, #b42318);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-work:not(.tr-waiting) .b-gantt-task {
+  background: color-mix(in srgb, var(--red, #b42318) 16%, #fff);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-work .b-task-percent-bar {
+  background: var(--red, #b42318);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-waiting .b-gantt-task {
+  background: repeating-linear-gradient(135deg, #fbeeec 0 5px, #f3d5d1 5px 10px);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-waiting .b-gantt-task-content i {
+  color: var(--red, #b42318);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-phase .b-gantt-task,
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-phase .b-task-percent-bar {
+  background: var(--red, #b42318);
+}
+
+.tranche-gantt .b-gantt-critical-paths .b-gantt-task-wrap.b-critical.tr-gate .b-gantt-task-content::before {
+  box-shadow: 0 0 0 2px var(--card, #fff), 0 0 0 3.5px var(--red, #b42318);
+}
+
+/* ---------- today, late payment, invoice due ---------- */
+
+.tranche-gantt .b-sch-time-range.tr-today {
+  --b-primary: var(--ink, #16181d);
+  --b-time-range-line-color: var(--ink, #16181d);
+  color: var(--ink, #16181d);
+  border-color: var(--ink, #16181d);
+}
+
+.tranche-gantt .b-timeline-sub-grid .b-sch-time-range.tr-today {
+  border-inline-start: 1.5px solid var(--ink, #16181d);
+  background: transparent;
+  opacity: 0.85;
+  width: 0;
+}
+
+.tranche-gantt .b-time-ranges-header-canvas .b-sch-time-range.tr-today {
+  top: 0;
+  bottom: auto;
+  background: transparent;
+  overflow: visible;
+  justify-content: flex-start;
+  border-inline-start: 1.5px solid var(--ink, #16181d);
+  height: 100%;
+  align-items: flex-start;
+  padding: 0;
+}
+
+.tranche-gantt .b-time-ranges-header-canvas .b-sch-time-range.tr-today label {
+  margin: 5px 0 0 0;
+  padding: 2px 8px 2px 7px;
+  border-radius: 0 999px 999px 0;
+  background: var(--ink, #16181d);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.tranche-gantt .b-timeline-sub-grid .b-sch-time-range.tr-late {
+  background: repeating-linear-gradient(135deg, rgba(180, 35, 24, 0.07) 0 6px, rgba(180, 35, 24, 0.025) 6px 12px);
+  border-inline: 1px dashed rgba(180, 35, 24, 0.35);
+  opacity: 1;
+}
+
+.tranche-gantt .b-time-ranges-header-canvas .b-sch-time-range.tr-late {
+  background: var(--red-soft, #fbe9e7);
+  color: var(--red, #b42318);
+  overflow: visible;
+  box-shadow: inset 0 -2px 0 var(--red, #b42318);
+}
+
+.tranche-gantt .b-time-ranges-header-canvas .b-sch-time-range.tr-late label {
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--red-soft, #fbe9e7);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--red, #b42318);
+}
+
+.tranche-gantt .b-indicator.tr-due {
+  color: var(--red, #b42318);
+  font-size: 10px;
+}
+
+.tranche-gantt .b-indicator.tr-due i {
+  color: var(--red, #b42318);
+  font-size: 10px;
+}
+
+/* ---------- tooltips (they float at the page level, outside the board) ---------- */
+
+.b-tooltip.tr-tooltip {
+  --b-popup-background: #fff;
+  --b-tooltip-rich-background: #fff;
+  --b-tooltip-color: #16181d;
+  --b-panel-padding: 0;
+  --b-popup-border-radius: 10px;
+  border: 1px solid #e2ded3;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(22, 24, 29, 0.12), 0 2px 6px rgba(22, 24, 29, 0.06);
+  color: #16181d;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.b-tooltip.tr-tooltip .b-tooltip-content {
+  display: block;
+  padding: 0;
+  color: #16181d;
+}
+
+.b-tooltip.tr-tooltip .tr-tip {
+  min-width: 236px;
+  max-width: 320px;
+  padding: 12px 14px 11px;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.b-tooltip.tr-tooltip .tr-tip-title {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.b-tooltip.tr-tooltip .tr-tip-sub {
+  margin-top: 1px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #efece4;
+  color: #8a8f99;
+  font-size: 11.5px;
+}
+
+.b-tooltip.tr-tooltip .tr-tip-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 2.5px 0;
+}
+
+.b-tooltip.tr-tooltip .tr-tip-row > span {
+  color: #8a8f99;
+  white-space: nowrap;
+}
+
+.b-tooltip.tr-tooltip .tr-tip-row > b {
+  font-weight: 500;
+  text-align: right;
+}
+
+.b-tooltip.tr-tooltip .num {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.b-tooltip.tr-tooltip .tr-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: #f1f0ec;
+  color: #4a4f5a;
+}
+
+.b-tooltip.tr-tooltip .tr-pill-ready,
+.b-tooltip.tr-tooltip .tr-pill-invoiced { background: #f8efd9; color: #b7791f; }
+.b-tooltip.tr-tooltip .tr-pill-held { background: #e8edfb; color: #3b5bdb; }
+.b-tooltip.tr-tooltip .tr-pill-paid { background: #e3f1eb; color: #0b6e4f; }
+.b-tooltip.tr-tooltip .tr-pill-overdue { background: #fbe9e7; color: #b42318; }
