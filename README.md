@@ -4,8 +4,8 @@
 
 Small studios plan the work in one tool and chase the money in another, so the plan keeps pretending the client has paid. In Tranche the money is part of the plan. Every phase of a client project ends in a PayPal payment gate, and the work after a gate stays locked until the client's money arrives. A Claude agent does the money work a careful studio manager would do. Plain code makes sure the agent can never pay anyone on its own.
 
-- Live demo: https://tranche-kohl.vercel.app (access code `northwind-judge`)
-- How it works: https://tranche-kohl.vercel.app/how-it-works
+- Live site: https://tranche-kohl.vercel.app (what it does and how it works, with the demo video)
+- Try it: https://tranche-kohl.vercel.app/dashboard?code=northwind-judge (the link carries the demo access code)
 - Video (under 3 minutes): _added before submission_
 - Built for the PayPal AI Hackathon, November 2026. MIT licence.
 
@@ -81,8 +81,8 @@ Approved payouts are written to a hash-chained receipt log. Project notes reach 
 
 ## Try it
 
-- **Live demo:** https://tranche-kohl.vercel.app
-- **Access code:** `northwind-judge`. Type it into the Agent panel on the right and press Save. The code only keeps bots from spending the demo's PayPal sandbox and Claude calls.
+- **Live demo:** open https://tranche-kohl.vercel.app and press "Try the live demo", or go straight to https://tranche-kohl.vercel.app/dashboard?code=northwind-judge
+- **Access code:** `northwind-judge`. The button and the link above fill it in for you. If the app ever asks, type it into the Agent panel and press Save. The code only keeps bots from spending the demo's PayPal sandbox and Claude calls.
 - **Pay as the client.** When a gate asks for the client's money, open the PayPal link on its card and log in with the PayPal sandbox client account. The app shows that test login under the payment gates. It is a sandbox account and holds play money only. If you would rather not log in, the gate card's "Record payment" button marks the PayPal invoice as paid for you.
 - **A quick path through it.** Press "Run today's check" and approve the deposit hold on PayPal. Then press "+3 days" a few times and run the check again after each one. Pay the invoices it raises, and approve the crew payout on the Money out tab. Let one invoice go late to watch the plan move. Then try the Safety test tab.
 - Each visitor gets their own project, stored in their own browser. "New demo" starts again from day 1.
